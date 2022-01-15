@@ -21,6 +21,7 @@ require 'rspec'
 
 require 'action_mailer'
 require 'active_record'
+require 'rails'
 
 require 'delayed_job'
 require 'delayed/backend/shared_spec'
@@ -36,14 +37,8 @@ else
 end
 ENV['RAILS_ENV'] = 'test'
 
-# Trigger AR to initialize
-ActiveRecord::Base # rubocop:disable Void
-
-module Rails
-  def self.root
-    '.'
-  end
-end
+FakeApp = Class.new(Rails::Application)
+FakeApp.config.eager_load = false
 
 Delayed::Worker.backend = :test
 
@@ -75,6 +70,8 @@ class Story < ActiveRecord::Base
 
   handle_asynchronously :whatever
 end
+
+FakeApp.initialize!
 
 RSpec.configure do |config|
   config.after(:each) do

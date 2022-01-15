@@ -15,8 +15,16 @@ end
 platforms :jruby do
   if ENV['RAILS_VERSION'] == '4.2.0'
     gem 'activerecord-jdbcsqlite3-adapter', '< 50.0'
-  elsif ENV['RAILS_VERSION'] == 'edge' || ENV['RAILS_VERSION'] == '6.1.0.rc2'
-    gem 'activerecord-jdbcsqlite3-adapter', :github => 'jruby/activerecord-jdbc-adapter'
+  elsif ENV['RAILS_VERSION'] == '5.0.0'
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 50.0'
+  elsif ENV['RAILS_VERSION'] == '5.1.0'
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 51.0'
+  elsif ENV['RAILS_VERSION'] == '5.2.0'
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 52.0'
+  elsif ENV['RAILS_VERSION'] == '6.0.0'
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 60.0'
+  elsif ENV['RAILS_VERSION'] == '6.1.0'
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 61.0'
   else
     gem 'activerecord-jdbcsqlite3-adapter'
   end
@@ -39,14 +47,17 @@ group :test do
   if ENV['RAILS_VERSION'] == 'edge'
     gem 'actionmailer', :github => 'rails/rails'
     gem 'activerecord', :github => 'rails/rails'
+    gem 'railties', :github => 'rails/rails'
   elsif ENV['RAILS_VERSION']
     gem 'actionmailer', "~> #{ENV['RAILS_VERSION']}"
     gem 'activerecord', "~> #{ENV['RAILS_VERSION']}"
+    gem 'railties', "~> #{ENV['RAILS_VERSION']}"
   else
     gem 'actionmailer', ['>= 3.0', '< 7.1']
     gem 'activerecord', ['>= 3.0', '< 7.1']
+    gem 'railties', ['>= 3.0', '< 7.1']
   end
-
+  gem 'net-smtp' if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0')
   gem 'rspec', '>= 3'
   gem 'simplecov', :require => false
   if /\A2.[12]/ =~ RUBY_VERSION

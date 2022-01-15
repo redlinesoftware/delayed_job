@@ -159,16 +159,18 @@ describe Delayed::Command do
   describe 'running worker pools defined by multiple --pool arguments' do
     it 'should run the correct worker processes' do
       command = Delayed::Command.new(['--pool=*:1', '--pool=test_queue:4', '--pool=mailers,misc:2'])
-      expect(FileUtils).to receive(:mkdir_p).with('./tmp/pids').once
+      pid_dir = File.expand_path('./tmp/pids')
+      log_dir = File.expand_path('./log')
+      expect(FileUtils).to receive(:mkdir_p).with(pid_dir).once
 
       [
-        ['delayed_job.0', {:quiet => true, :pid_dir => './tmp/pids', :log_dir => './log', :queues => []}],
-        ['delayed_job.1', {:quiet => true, :pid_dir => './tmp/pids', :log_dir => './log', :queues => ['test_queue']}],
-        ['delayed_job.2', {:quiet => true, :pid_dir => './tmp/pids', :log_dir => './log', :queues => ['test_queue']}],
-        ['delayed_job.3', {:quiet => true, :pid_dir => './tmp/pids', :log_dir => './log', :queues => ['test_queue']}],
-        ['delayed_job.4', {:quiet => true, :pid_dir => './tmp/pids', :log_dir => './log', :queues => ['test_queue']}],
-        ['delayed_job.5', {:quiet => true, :pid_dir => './tmp/pids', :log_dir => './log', :queues => %w[mailers misc]}],
-        ['delayed_job.6', {:quiet => true, :pid_dir => './tmp/pids', :log_dir => './log', :queues => %w[mailers misc]}]
+        ['delayed_job.0', {:quiet => true, :pid_dir => pid_dir, :log_dir => log_dir, :queues => []}],
+        ['delayed_job.1', {:quiet => true, :pid_dir => pid_dir, :log_dir => log_dir, :queues => ['test_queue']}],
+        ['delayed_job.2', {:quiet => true, :pid_dir => pid_dir, :log_dir => log_dir, :queues => ['test_queue']}],
+        ['delayed_job.3', {:quiet => true, :pid_dir => pid_dir, :log_dir => log_dir, :queues => ['test_queue']}],
+        ['delayed_job.4', {:quiet => true, :pid_dir => pid_dir, :log_dir => log_dir, :queues => ['test_queue']}],
+        ['delayed_job.5', {:quiet => true, :pid_dir => pid_dir, :log_dir => log_dir, :queues => %w[mailers misc]}],
+        ['delayed_job.6', {:quiet => true, :pid_dir => pid_dir, :log_dir => log_dir, :queues => %w[mailers misc]}]
       ].each do |args|
         expect(command).to receive(:run_process).with(*args).once
       end
